@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma ENEM 2025</title>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        overflow: hidden;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    h1 {
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 300;
+    }
+    
+    .subtitle {
+        margin: 10px 0 0 0;
+        opacity: 0.8;
+        font-size: 1.1em;
+    }
+    
+    .controls {
+        background: #f8f9fa;
+        padding: 20px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .week-navigation {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .week-btn {
+        padding: 8px 16px;
+        border: 2px solid #007bff;
+        background: white;
+        color: #007bff;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .week-btn.active {
+        background: #007bff;
+        color: white;
+    }
+    
+    .week-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    }
+    
+    .legend {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9em;
+    }
+    
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+    }
+    
+    .intensity-legend {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .intensity-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85em;
+    }
+    
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
+        padding: 30px;
+        background: #f8f9fa;
+    }
+    
+    .day {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        min-height: 200px;
+        position: relative;
+    }
+    
+    .day:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .day h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.1em;
+        color: #2c3e50;
+        font-weight: 600;
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .task {
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        font-size: 0.85em;
+        font-weight: 500;
+        color: white;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .task-content {
+        flex: 1;
+    }
+    
+    .intensity {
+        font-size: 0.75em;
+        background: rgba(255,255,255,0.3);
+        padding: 2px 6px;
+        border-radius: 10px;
+        margin-left: 5px;
+    }
+    
+    /* Cores por matéria */
+    .matematica { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .linguagens { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .ciencias-natureza { background: linear-gradient(135deg, #27ae60, #229954); }
+    .ciencias-humanas { background: linear-gradient(135deg, #f39c12, #d68910); }
+    .redacao { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .simulado { background: linear-gradient(135deg, #e67e22, #d35400); }
+    .revisao { background: linear-gradient(135deg, #34495e, #2c3e50); }
+    .leitura { background: linear-gradient(135deg, #16a085, #138d75); }
+    
+    .week {
+        display: none;
+    }
+    
+    .week.active {
+        display: contents;
+    }
+    
+    .today {
+        border: 3px solid #ffd700;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    
+    @media (max-width: 1200px) {
+        .calendar {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .calendar {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .controls {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .legend {
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .calendar {
+            grid-template-columns: 1fr;
+        }
+        
+        body {
+            padding: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Cronograma de Estudos ENEM</h1>
+        <p class="subtitle">Preparação Intensiva - Outubro/Novembro 2025</p>
+    </div>
+    
+    <div class="controls">
+        <div class="week-navigation">
+            <span style="font-weight: 600; margin-right: 10px;">Semanas:</span>
+            <button class="week-btn active" onclick="showWeek(1)">1ª Semana</button>
+            <button class="week-btn" onclick="showWeek(2)">2ª Semana</button>
+            <button class="week-btn" onclick="showWeek(3)">3ª Semana</button>
+            <button class="week-btn" onclick="showWeek(4)">4ª Semana</button>
+            <button class="week-btn" onclick="showWeek(5)">5ª Semana</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color matematica"></div>
+                <span>Matemática</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color linguagens"></div>
+                <span>Linguagens</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color ciencias-natureza"></div>
+                <span>C. Natureza</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color ciencias-humanas"></div>
+                <span>C. Humanas</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color redacao"></div>
+                <span>Redação</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color simulado"></div>
+                <span>Simulado</span>
+            </div>
+        </div>
+        
+        <div class="intensity-legend">
+            <span style="font-weight: 600;">Intensidade:</span>
+            <div class="intensity-item">
+                <span>🟢 1h</span>
+            </div>
+            <div class="intensity-item">
+                <span>🟡 2h</span>
+            </div>
+            <div class="intensity-item">
+                <span>🔴 3h+</span>
+            </div>
+        </div>
+    </div>
+
+<div class="calendar">
+    <!-- Semana 1 -->
+    <div class="week week-1 active">
+        <div class="day today">
+            <h3>09/10 - Quinta</h3>
+            <div class="task linguagens">
+                <span class="task-content">Gramática e Interpretação</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Planejamento e rascunho</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>10/10 - Sexta</h3>
+            <div class="task matematica">
+                <span class="task-content">Exercícios e fórmulas</span>
+                <span class="intensity">🔴 3h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão Matemática</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>11/10 - Sábado</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Biologia</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>12/10 - Domingo</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">História</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Correção e análise</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>13/10 - Segunda</h3>
+            <div class="task matematica">
+                <span class="task-content">Problemas</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão de pontos fracos</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>14/10 - Terça</h3>
+            <div class="task linguagens">
+                <span class="task-content">Literatura e interpretação</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Planejamento de novo texto</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>15/10 - Quarta</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Química</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Semana 2 -->
+    <div class="week week-2">
+        <div class="day">
+            <h3>16/10 - Quinta</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">Geografia</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Rascunho</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>17/10 - Sexta</h3>
+            <div class="task matematica">
+                <span class="task-content">Exercícios focados</span>
+                <span class="intensity">🔴 3h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão rápida</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>18/10 - Sábado</h3>
+            <div class="task simulado">
+                <span class="task-content">Simulado: Linguagens e Matemática</span>
+                <span class="intensity">🔴 4h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Correção e análise</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>19/10 - Domingo</h3>
+            <div class="task redacao">
+                <span class="task-content">Texto completo</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão geral da semana</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>20/10 - Segunda</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Física</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>21/10 - Terça</h3>
+            <div class="task linguagens">
+                <span class="task-content">Gramática e Interpretação</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Planejamento de texto</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>22/10 - Quarta</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">Sociologia/Filosofia</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Semana 3 -->
+    <div class="week week-3">
+        <div class="day">
+            <h3>23/10 - Quinta</h3>
+            <div class="task matematica">
+                <span class="task-content">Problemas e raciocínio lógico</span>
+                <span class="intensity">🔴 3h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão rápida</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>24/10 - Sexta</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Biologia/Química</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Rascunho</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>25/10 - Sábado</h3>
+            <div class="task simulado">
+                <span class="task-content">Simulado: Ciências Humanas e Natureza</span>
+                <span class="intensity">🔴 4h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Correção e análise</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>26/10 - Domingo</h3>
+            <div class="task redacao">
+                <span class="task-content">Texto completo</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão geral da semana</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>27/10 - Segunda</h3>
+            <div class="task linguagens">
+                <span class="task-content">Literatura e interpretação</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Planejamento</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>28/10 - Terça</h3>
+            <div class="task matematica">
+                <span class="task-content">Exercícios focados</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão rápida</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>29/10 - Quarta</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Física/Química</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Semana 4 -->
+    <div class="week week-4">
+        <div class="day">
+            <h3>30/10 - Quinta</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">História/Geografia</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Rascunho final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>31/10 - Sexta</h3>
+            <div class="task simulado">
+                <span class="task-content">Simulado geral: todas as matérias</span>
+                <span class="intensity">🔴 5h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Correção e análise</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>01/11 - Sábado</h3>
+            <div class="task redacao">
+                <span class="task-content">Texto completo</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão de pontos fracos</span>
+                <span class="intensity">🟡 2h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>02/11 - Domingo</h3>
+            <div class="task linguagens">
+                <span class="task-content">Gramática e interpretação</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Revisão geral</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>03/11 - Segunda</h3>
+            <div class="task matematica">
+                <span class="task-content">Revisão rápida</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Planejamento final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>04/11 - Terça</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Revisão final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Exercícios rápidos</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>05/11 - Quarta</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">Revisão final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task leitura">
+                <span class="task-content">Leitura crítica</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Semana 5 (Final) -->
+    <div class="week week-5">
+        <div class="day">
+            <h3>06/11 - Quinta</h3>
+            <div class="task linguagens">
+                <span class="task-content">Revisão geral: Linguagens</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task matematica">
+                <span class="task-content">Revisão geral: Matemática</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Rascunho final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>07/11 - Sexta</h3>
+            <div class="task ciencias-natureza">
+                <span class="task-content">Revisão geral: Ciências da Natureza</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task revisao">
+                <span class="task-content">Exercícios rápidos</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>08/11 - Sábado</h3>
+            <div class="task ciencias-humanas">
+                <span class="task-content">Revisão geral: Ciências Humanas</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+            <div class="task redacao">
+                <span class="task-content">Redação final</span>
+                <span class="intensity">🟢 1h</span>
+            </div>
+        </div>
+        <div class="day">
+            <h3>09/11 - Domingo</h3>
+            <div class="task simulado" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                <span class="task-content">🎯 DIA DO ENEM! Confiança e foco!</span>
+                <span class="intensity">💪</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+function showWeek(weekNumber) {
+    // Remove active class from all weeks and buttons
+    document.querySelectorAll('.week').forEach(week => {
+        week.classList.remove('active');
+    });
+    document.querySelectorAll('.week-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to selected week and button
+    document.querySelector(`.week-${weekNumber}`).classList.add('active');
+    document.querySelectorAll('.week-btn')[weekNumber - 1].classList.add('active');
+}
+
+// Initialize with first week
+document.addEventListener('DOMContentLoaded', function() {
+    showWeek(1);
+});
+</script>
