@@ -199,34 +199,290 @@
         box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
     }
     
+    /* Responsividade aprimorada */
+    @media (max-width: 1400px) {
+        .container {
+            margin: 0 10px;
+        }
+    }
+    
     @media (max-width: 1200px) {
         .calendar {
             grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .calendar {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .controls {
+            padding: 15px;
+        }
+        
+        .week-navigation {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .week-btn {
+            padding: 6px 12px;
+            font-size: 0.9em;
+        }
+        
+        .legend {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .legend-item {
+            font-size: 0.85em;
         }
     }
     
     @media (max-width: 768px) {
         .calendar {
             grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 20px;
         }
         
         .controls {
             flex-direction: column;
             text-align: center;
+            gap: 20px;
+        }
+        
+        .week-navigation {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .week-navigation span {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
         }
         
         .legend {
             justify-content: center;
+            width: 100%;
+        }
+        
+        .intensity-legend {
+            justify-content: center;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+        }
+        
+        .header {
+            padding: 20px;
+        }
+        
+        .day {
+            min-height: 160px;
+            padding: 12px;
+        }
+        
+        .day h3 {
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+        
+        .task {
+            font-size: 0.8em;
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        
+        .intensity {
+            font-size: 0.7em;
+            margin-left: 0;
+            align-self: flex-end;
         }
     }
     
     @media (max-width: 480px) {
         .calendar {
             grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 15px;
         }
         
         body {
+            padding: 5px;
+        }
+        
+        .container {
+            border-radius: 10px;
+            margin: 0 5px;
+        }
+        
+        h1 {
+            font-size: 1.5em;
+        }
+        
+        .subtitle {
+            font-size: 0.9em;
+        }
+        
+        .week-btn {
+            padding: 8px 12px;
+            font-size: 0.85em;
+            margin: 2px;
+            min-width: 70px;
+        }
+        
+        .legend-item {
+            font-size: 0.8em;
+        }
+        
+        .legend-color {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .intensity-legend {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .intensity-item {
+            font-size: 0.8em;
+        }
+        
+        .day {
+            min-height: 140px;
+            padding: 15px;
+        }
+        
+        .day h3 {
+            font-size: 0.95em;
+            text-align: center;
+        }
+        
+        .task {
+            font-size: 0.75em;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .task-content {
+            line-height: 1.3;
+        }
+        
+        .intensity {
+            font-size: 0.65em;
+            padding: 1px 4px;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        body {
+            padding: 2px;
+        }
+        
+        .container {
+            margin: 0 2px;
+            border-radius: 8px;
+        }
+        
+        h1 {
+            font-size: 1.3em;
+        }
+        
+        .subtitle {
+            font-size: 0.85em;
+        }
+        
+        .header {
+            padding: 15px;
+        }
+        
+        .controls {
             padding: 10px;
+        }
+        
+        .week-btn {
+            padding: 6px 8px;
+            font-size: 0.8em;
+            min-width: 60px;
+        }
+        
+        .calendar {
+            padding: 10px;
+        }
+        
+        .day {
+            padding: 10px;
+            min-height: 120px;
+        }
+        
+        .day h3 {
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        
+        .task {
+            font-size: 0.7em;
+            padding: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .legend-item,
+        .intensity-item {
+            font-size: 0.75em;
+        }
+    }
+    
+    /* Melhorias para orientação landscape em mobile */
+    @media (max-width: 768px) and (orientation: landscape) {
+        .calendar {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .header {
+            padding: 15px;
+        }
+        
+        h1 {
+            font-size: 1.6em;
+        }
+        
+        .day {
+            min-height: 120px;
+        }
+    }
+    
+    /* Otimizações para touch */
+    @media (hover: none) {
+        .week-btn:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .day:hover {
+            transform: none;
+        }
+        
+        .week-btn:active {
+            transform: scale(0.95);
         }
     }
 </style>
@@ -677,10 +933,113 @@ function showWeek(weekNumber) {
     // Add active class to selected week and button
     document.querySelector(`.week-${weekNumber}`).classList.add('active');
     document.querySelectorAll('.week-btn')[weekNumber - 1].classList.add('active');
+    
+    // Scroll to top of calendar on mobile for better UX
+    if (window.innerWidth <= 768) {
+        document.querySelector('.calendar').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
 }
 
-// Initialize with first week
+// Touch/swipe navigation for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+let currentWeek = 1;
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const swipeDistance = touchEndX - touchStartX;
+    
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0 && currentWeek > 1) {
+            // Swipe right - previous week
+            currentWeek--;
+            showWeek(currentWeek);
+        } else if (swipeDistance < 0 && currentWeek < 5) {
+            // Swipe left - next week
+            currentWeek++;
+            showWeek(currentWeek);
+        }
+    }
+}
+
+// Add touch event listeners for swipe navigation
+document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft' && currentWeek > 1) {
+        currentWeek--;
+        showWeek(currentWeek);
+    } else if (e.key === 'ArrowRight' && currentWeek < 5) {
+        currentWeek++;
+        showWeek(currentWeek);
+    }
+});
+
+// Update current week when button is clicked
+document.querySelectorAll('.week-btn').forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+        currentWeek = index + 1;
+    });
+});
+
+// Highlight today's date
+function highlightToday() {
+    const today = new Date();
+    const todayString = today.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit'
+    });
+    
+    document.querySelectorAll('.day h3').forEach(dayHeader => {
+        if (dayHeader.textContent.includes(todayString)) {
+            dayHeader.parentElement.classList.add('today');
+        }
+    });
+}
+
+// Responsive text adjustment
+function adjustTextForMobile() {
+    if (window.innerWidth <= 480) {
+        // Shorten task descriptions for very small screens
+        document.querySelectorAll('.task-content').forEach(task => {
+            const text = task.textContent;
+            if (text.length > 25) {
+                const shortened = text.substring(0, 22) + '...';
+                task.setAttribute('title', text); // Show full text on hover/touch
+                task.textContent = shortened;
+            }
+        });
+    }
+}
+
+// Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     showWeek(1);
+    highlightToday();
+    adjustTextForMobile();
+    
+    // Re-adjust on window resize
+    window.addEventListener('resize', adjustTextForMobile);
 });
+
+// Prevent zoom on double tap (iOS Safari)
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
 </script>
